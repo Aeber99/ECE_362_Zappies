@@ -1,5 +1,5 @@
 #include "pico/stdlib.h"
-#include "gun.c"
+// #include "gun.c"
 
 int main() {
     stdio_init_all();
@@ -10,6 +10,6 @@ int main() {
     // }
 
     // Code for testing gun
-    init_gun(21, 26);
+    init_gun(12, 13);
     
 }

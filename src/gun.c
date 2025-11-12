@@ -4,6 +4,17 @@
 int hit_gpio = -1;
 int trigger_gpio = -1;
 
+void gun_isr() {
+    if (gpio_get_irq_event_mask(trigger_gpio) & GPIO_IRQ_EDGE_FALL) {
+        gpio_acknowledge_irq(trigger_gpio, GPIO_IRQ_EDGE_FALL);
+        if (gpio_get(hit_gpio)) {
+            printf("Hit!\n");
+        } else {
+            printf("Miss!\n");
+        }
+    }
+}
+
 void init_gun(int hit_pin, int trigger_pin) {
     hit_gpio = hit_pin;
     trigger_gpio = trigger_pin;
@@ -15,16 +26,12 @@ void init_gun(int hit_pin, int trigger_pin) {
     gpio_set_dir(trigger_gpio, GPIO_IN);
 
     gpio_add_raw_irq_handler_masked((1 << trigger_gpio), gun_isr);
-    gpio_set_irq_enabled(trigger_gpio, GPIO_IRQ_EDGE_RISE, true);
+    gpio_set_irq_enabled(trigger_gpio, GPIO_IRQ_EDGE_FALL, true);
     irq_set_enabled(IO_IRQ_BANK0, true);
 
-}
-
-void gun_isr() {
-    if (gpio_get_irq_event_mask(trigger_gpio) & GPIO_IRQ_EDGE_RISE) {
-        gpio_acknowledge_irq(trigger_gpio, GPIO_IRQ_EDGE_RISE);
-        if (gpio_get(hit_gpio)) {
-            printf("Hit!\n");
-        }
+    for(;;) {
+        printf("Waiting\n");
+        busy_wait_ms(1000);
     }
+
 }
