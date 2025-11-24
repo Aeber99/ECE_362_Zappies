@@ -23,6 +23,9 @@
  *
  */
 
+#ifndef VGA16_GRAPHICS_V2_H
+#define VGA16_GRAPHICS_V2_H
+
 
 // Give the I/O pins that we're using some names that make sense - usable in main()
 //  enum vga_pins {HSYNC=16, VSYNC, LO_GRN, HI_GRN, BLUE_PIN, RED_PIN} ;
@@ -81,3 +84,5 @@ void clearLowFrame(short, short) ;
 short readPixel(short, short) ;
 // draw a little cross
 void crosshair(short x, short y, short c) ;
+
+#endif // VGA16_GRAPHICS_V2_H
