@@ -188,16 +188,27 @@
 
 
 //starting duck hunt logic here
-
-
 /* this can be the static background*/
 int main() {
   stdio_init_all();
   initVGA();
 
-  // // Draw sky and grass background
-  fillRect(0, 0, 640, 360, CYAN);
-  fillRect(0, 360, 640, 120, GREEN);
+  //testing RGB 
+  fillRect(0, 0, 640, 480, BLACK);
+  fillRect(80, 40, 160, 120, RED);  // i don't see red :(
+  fillRect(260, 40, 160, 120, GREEN); // i see green
+  fillRect(170, 200, 160, 120, BLUE); // i see blue
+
+  // // // Draw sky and grass background
+  // fillRect(0, 0, 640, 360, CYAN);
+  // fillRect(0, 360, 640, 120, GREEN);
+
+  // //testing to see if yellow shows up -> faintly but yes :)
+  // fillRect(0, 0, 640, 480, CYAN);     // background
+  // fillRect(200, 160, 80, 80, YELLOW); // yellow square on top
+
+
+
   while (1) {
     sleep_ms(1000);
   }
