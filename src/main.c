@@ -57,7 +57,7 @@ int main() {
   // small prompt
   setTextColor(WHITE);
   setCursor(260, 360);
-  writeString("Press button to start");
+  writeStringBig("Press button to start");
 
   // press the button
   wait_for_button_press();

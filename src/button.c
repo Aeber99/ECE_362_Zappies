@@ -24,7 +24,11 @@ void wait_for_button_press(void) {
             printf("Button press detected");
             sleep_ms(30);
             if (button_pressed()) {
-                while (button_pressed()) sleep_ms(10);
+
+
+                while (button_pressed()) 
+                
+                sleep_ms(10);
                 printf("Button released, continuing\n");
                 return;
             }

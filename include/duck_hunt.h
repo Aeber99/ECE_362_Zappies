@@ -10,10 +10,10 @@ extern const int PIECE_SIZE;
 #define MAX_PARTICLES 400
 
 // Duck state
+//idk what extern does exactly but it seems to work
 extern int duck_x;
 extern int duck_y;
 extern int duck_alive;
-
 extern int part_x[];
 extern int part_y[];
 extern int part_vx[];
