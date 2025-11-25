@@ -30,4 +30,5 @@ void handleShot(int sx, int sy);
 void spawnRandomDuck(void);
 void initDuckHunt(void);
 
+
 #endif // DUCK_HUNT_H

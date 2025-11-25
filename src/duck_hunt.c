@@ -8,6 +8,9 @@
 #include "duck_hunt.h"
 #include "vga16_graphics_v2.h"
 #include "pico/stdlib.h"
+#include "audio.h"
+
+
 
 
 // int main() {
@@ -251,10 +254,11 @@ void drawDuck(int x, int y) {
   }
 }
 
+
 void eraseDuck(int x, int y) {
   int sky_top = y;
   int sky_bottom = y + DUCK_H;
-  if (sky_bottom <= 360) {
+    if (sky_bottom <= 360) {
     // fully in sky
     fillRect(x, y, DUCK_W, DUCK_H, CYAN);
   } else if (sky_top >= 360) {
@@ -421,6 +425,8 @@ void handleShot(int sx, int sy) {
   if (isShotInDuck(sx, sy)) {
     if (duck_alive) {
       duck_alive = 0;
+      // play short shot buzz
+      audio_play_shot();
       shatterDuck();
       // spawn a new random duck after shatter animation completes
       sleep_ms(500);

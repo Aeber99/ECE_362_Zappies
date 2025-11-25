@@ -28,6 +28,7 @@
 #include "hardware/pio.h"
 #include "hardware/dma.h"
 #include "hardware/clocks.h"
+#include "audio.h"
 
 
 /* this can be the static background*/
@@ -35,6 +36,7 @@ int main() {
   stdio_init_all();
   initVGA();
   init_inputs();
+  audio_init();
 
   // seed random number generator -> otherwise same sequence every time
   srand(time_us_32());
