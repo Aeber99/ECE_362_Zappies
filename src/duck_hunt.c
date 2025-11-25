@@ -207,23 +207,31 @@ const int FRAMES = 50;
 const int RADIUS = 60; // containment radius from center
 
 void drawDuck(int x, int y) {
-  // body
-  fillRect(x, y, DUCK_W, DUCK_H, YELLOW);
+  // black first so the yellow is visible
+  // draw the yellow on same rectangle 
+  fillRect(x, y, DUCK_W, DUCK_H, BLACK);
 
-  // eyes (two small black circles)
+  // body
+  int bx = x;
+  int by = y;
+  int bw = DUCK_W;
+  int bh = DUCK_H;
+  fillRect(bx, by, bw, bh, YELLOW);
+
+  // eyes (two small black circles) relative to yellow body
   int eye_r = 4;
-  int left_eye_x = x + (DUCK_W * 33) / 100;
-  int right_eye_x = x + (DUCK_W * 67) / 100;
-  int eye_y = y + (DUCK_H * 28) / 100;
+  int left_eye_x = bx + (bw * 33) / 100;
+  int right_eye_x = bx + (bw * 67) / 100;
+  int eye_y = by + (bh * 28) / 100;
   fillCircle(left_eye_x, eye_y, eye_r, BLACK);
   fillCircle(right_eye_x, eye_y, eye_r, BLACK);
 
-  // beak: a small filled downward-pointing triangle centered in the square
-  int cx = x + DUCK_W / 2;
-  int cy = y + DUCK_H / 2;
+  // beak: a small filled downward-pointing triangle centered in the yellow body
+  int cx = bx + bw / 2;
+  int cy = by + bh / 2;
   int beak_height = 10;
-  int beak_base = 28; // maximum base width of the triangle
-  
+  int beak_base = 28; // max base width of the triangle
+
   // erase yellow in beak area before drawing
   for (int i = 0; i < beak_height; ++i) {
     int half = (beak_base * (beak_height - i)) / (2 * beak_height);
@@ -232,7 +240,7 @@ void drawDuck(int x, int y) {
     int width = half * 2 + 1;
     drawHLine(left, row_y, width, BLACK);
   }
-  
+
   // draw orange beak
   for (int i = 0; i < beak_height; ++i) {
     int half = (beak_base * (beak_height - i)) / (2 * beak_height);
@@ -407,7 +415,7 @@ void shatterDuck(void) {
   }
 }
 
-// shot occurs at screen coordinates (sx,sy).
+// shot occurs at screen coordinates (sx,sy)
 // if it hits the duck, the duck will shatter -> it ded
 void handleShot(int sx, int sy) {
   if (isShotInDuck(sx, sy)) {

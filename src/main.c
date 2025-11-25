@@ -20,6 +20,7 @@
  */
 #include "vga16_graphics_v2.h"
 #include "duck_hunt.h"
+#include "button.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,8 +34,9 @@
 int main() {
   stdio_init_all();
   initVGA();
-  
-  // Seed random number generator 
+  init_inputs();
+
+  // seed random number generator -> otherwise same sequence every time
   srand(time_us_32());
 
   // //testing RGB 
@@ -43,6 +45,22 @@ int main() {
   // fillRect(260, 40, 160, 120, GREEN); // i see green
   // fillRect(170, 200, 160, 120, BLUE); // i see blue
 
+
+  // Show intro screen: black background, big title
+  fillRect(0, 0, 640, 480, BLACK);
+  // Big title in the middle
+  setTextColorBig(WHITE, BLACK);
+  setCursor(120, 140);
+  writeStringBig("DUCK HUNT");
+  // small prompt
+  setTextColor(WHITE);
+  setCursor(260, 360);
+  writeString("Press button to start");
+
+  // press the button
+  wait_for_button_press();
+
+  // Start game screen: draw background and spawn initial duck
   // // Draw sky and grass background
   fillRect(0, 0, 640, 360, CYAN);
   fillRect(0, 360, 640, 120, GREEN);
@@ -60,6 +78,7 @@ int main() {
   sleep_ms(5000);
   printf("Simulating shot at duck center (%d,%d)\n", duck_x + DUCK_W/2, duck_y + DUCK_H/2);
   handleShot(duck_x + DUCK_W/2, duck_y + DUCK_H/2);
+
 
   // now enter game loop for continuous spawning
   while (1) {

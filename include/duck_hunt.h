@@ -3,7 +3,6 @@
 
 #include "vga16_graphics_v2.h"
 
-// Constants
 extern const int DUCK_W;
 extern const int DUCK_H;
 extern const int STEP;
@@ -15,7 +14,6 @@ extern int duck_x;
 extern int duck_y;
 extern int duck_alive;
 
-// Particle arrays
 extern int part_x[];
 extern int part_y[];
 extern int part_vx[];
@@ -24,7 +22,6 @@ extern char part_color[];
 extern int part_alive[];
 extern int n;
 
-// Function declarations
 void drawDuck(int x, int y);
 void eraseDuck(int x, int y);
 int isShotInDuck(int sx, int sy);
