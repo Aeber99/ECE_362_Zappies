@@ -213,34 +213,171 @@ int duck_alive = 1;
   return 0;
 }
 
-// kill logic: make the duck turn red and fall straight down, then disappear
-static void shatterDuck(void) {
-  // red square falling from the duck's current position
-  int prev_y = duck_y;
+// // kill logic: make the duck turn red and fall straight down, then disappear
+ void shatterDuck(void) {
+//   // red square falling from the duck's current position
+//   int prev_y = duck_y;
 
-  // draw initial red duck
-  fillRect(duck_x, prev_y, DUCK_W, DUCK_H, RED);
-  sleep_ms(50);
+//   // draw initial red duck
+//   fillRect(duck_x, prev_y, DUCK_W, DUCK_H, RED);
+//   sleep_ms(50);
 
-  // step down until the rectangle reaches the bottom of the screen
-  while (prev_y + DUCK_H < 480) {
-    // erase the previous red rectangle by restoring the background
-    eraseDuck(duck_x, prev_y);
+//   // step down until the rectangle reaches the bottom of the screen
+//   while (prev_y + DUCK_H < 480) {
+//     // erase the previous red rectangle by restoring the background
+//     eraseDuck(duck_x, prev_y);
 
-    // move down a bit
-    prev_y += 4;
+//     // move down a bit
+//     prev_y += 4;
 
-    // draw at new position
-    fillRect(duck_x, prev_y, DUCK_W, DUCK_H, RED);
-    sleep_ms(30);
-  }
+//     // draw at new position
+//     fillRect(duck_x, prev_y, DUCK_W, DUCK_H, RED);
+//     sleep_ms(30);
+//   }
 
-  // final erase to remove the last red rectangle
-  eraseDuck(duck_x, prev_y);
+//   // final erase to remove the last red rectangle
+//   eraseDuck(duck_x, prev_y);
+// }
+
+
+// Kill logic: break duck into pixels that fly outward and disappear
+// keep it large pieces-> make step size bigger
+const int STEP = 4; // spacing / to determine the size of the chunks
+const int PIECE_SIZE = 4; // block size -> creates a 4x4 block
+const int max_w = (DUCK_W + STEP - 1) / STEP;   //(using ceiling int div?)
+const int max_h = (DUCK_H + STEP - 1) / STEP;
+const int MAX_PARTICLES = max_w * max_h;
+
+// current coordinates of the pieces
+ int part_x[MAX_PARTICLES];
+    int part_y[MAX_PARTICLES];
+// velocity of the pieces -> dont need?
+    int part_vx[MAX_PARTICLES];
+    int part_vy[MAX_PARTICLES];
+// -> dont need?->unless we try to get it to turn red on shot
+    char part_color[MAX_PARTICLES];
+ // -> to check if within the radius -> if outside then 0( it ded)
+    int part_alive[MAX_PARTICLES];
+    int n = 0; // current count of particles created
+
+int cx = duck_x + DUCK_W/2;
+int cy = duck_y + DUCK_H/2;
+
+// initialize particles
+for (int iy = 0; iy < DUCK_H; iy += STEP) {
+for (int ix = 0; ix < DUCK_W; ix += STEP) {
+int sx = duck_x + ix;
+int sy = duck_y + iy;
+char c = (char) readPixel(sx, sy);
+
+
+            part_x[n] = sx;
+            part_y[n] = sy;
+            part_color[n] = c;
+            part_alive[n] = 1;
+
+// simple random diagonal-ish velocity
+
+//look into using rand -> and using it PROPERLY**
+part_vx[n] = (rand() % 3) + 1;
+        part_vy[n] = (rand() % 3) + 1;
+            if (rand() & 1) part_vx[n] = -part_vx[n];
+            if (rand() & 1) part_vy[n] = -part_vy[n];
+n++; // Increment
+}
+}
+
+// remove original duck
+eraseDuck(duck_x, duck_y);
+
+// shatter parameters
+const int FRAMES = 50;
+const int RADIUS = 60; // containment radius from center
+
+for (int f = 0; f < FRAMES; ++f) {
+//clear clear
+int left = cx - RADIUS;
+int top = cy - RADIUS;
+int right = cx + RADIUS + PIECE_SIZE;
+int bottom = cy + RADIUS + PIECE_SIZE;
+if (left < 0) left = 0;
+if (top < 0) top = 0;
+if (right > 639) right = 639;
+if (bottom > 479) bottom = 479;
+int w = right - left;
+int h = bottom - top;
+
+// bkg for square, and handling sky/grass split - uh needed? or keep in sky?
+if (bottom <= 360) {
+fillRect(left, top, w, h, CYAN);
+} else if (top >= 360) {
+fillRect(left, top, w, h, GREEN);
+} else {
+// split
+int top_h = 360 - top;
+fillRect(left, top, w, top_h, CYAN);
+fillRect(left, 360, w, h - top_h, GREEN);
+}
+
+// update and draw particles
+
+for (int i = 0; i < n; ++i) {
+            // alive status
+            if (!part_alive[i])
+continue;
+            // update position
+            part_x[i] += part_vx[i]; //horizontal
+            part_y[i] += part_vy[i]; //vertical
+            // if particle leaves radius,dead
+            int dx = part_x[i] - cx;
+            int dy = part_y[i] - cy;
+            if (dx*dx + dy*dy > RADIUS*RADIUS) {  //make a circle
+                part_alive[i] = 0; // dead
+                continue;
+}
+
+// draw piece
+if (part_x[i] + PIECE_SIZE > 0 && part_x[i] < 640 && part_y[i] +
+PIECE_SIZE > 0 &&
+                part_y[i] < 480) {
+                fillRect(part_x[i], part_y[i], PIECE_SIZE, PIECE_SIZE,
+part_color[i]);
+            } else {
+                part_alive[i] = 0; // dead if it flies off-screen
+            }
+        }
+        //slow frame for a more gradual shatter
+        sleep_ms(60);
+    }
+
+// clear clear
+int left = cx - RADIUS;
+int top = cy - RADIUS;
+if (left < 0) left = 0;
+if (top < 0) top = 0;
+int right = cx + RADIUS + PIECE_SIZE;
+int bottom = cy + RADIUS + PIECE_SIZE;
+if (right > 639) right = 639;
+if (bottom > 479) bottom = 479;
+int w = right - left;
+int h = bottom - top;
+
+//make the bkg again
+
+
+if (bottom <= 360) {
+fillRect(left, top, w, h, CYAN);
+} else if (top >= 360) {
+fillRect(left, top, w, h, GREEN);
+} else {
+int top_h = 360 - top;
+fillRect(left, top, w, top_h, CYAN);
+fillRect(left, 360, w, h - top_h, GREEN);
+}
 }
 
 // shot occurs at screen coordinates (sx,sy).
-// If it hits the duck, the duck will shatter
+// if it hits the duck, the duck will shatter -> it ded
  void handleShot(int sx, int sy) {
   if (isShotInDuck(sx, sy)) {
     if (duck_alive) {
@@ -303,15 +440,20 @@ int main() {
 }
 
 /*
-to do :
+to do :    
 1) make kill logic more dramatic 
   -spining duck? (idk how to do this)
   -add sound?
-  -kind of like a shatter effect with pieces? (this might be nice)
+  -kind of like a shatter effect with pieces? (this might be nice)  --done and satisfied ish :D
+  -make it change color to red when shot? -> might not be that hard 
 
 2) multiple ducks 
   -they move into the screen from random heights and speeds
   -need to manage ducks (alive/dead, position, speed)
+
+3)make a nicer looking duck? 
+  - 2 black eyes and a orange triangle beak?
+  -or 3 square's of differnent sizes (big body small face tiny tiny beak/tail)
 
 */
 
