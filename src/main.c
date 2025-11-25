@@ -199,7 +199,40 @@ int duck_y = 80;
 int duck_alive = 1;
 
  void drawDuck(int x, int y) {
+  // body
   fillRect(x, y, DUCK_W, DUCK_H, YELLOW);
+
+  // eyes (two small black circles)
+  int eye_r = 4;
+  int left_eye_x = x + (DUCK_W * 33) / 100;
+  int right_eye_x = x + (DUCK_W * 67) / 100;
+  int eye_y = y + (DUCK_H * 28) / 100;
+  fillCircle(left_eye_x, eye_y, eye_r, BLACK);
+  fillCircle(right_eye_x, eye_y, eye_r, BLACK);
+
+  // beak: a small filled downward-pointing triangle centered in the square
+  int cx = x + DUCK_W / 2;
+  int cy = y + DUCK_H / 2;
+  int beak_height = 10;
+  int beak_base = 28; // maximum base width of the triangle
+  
+  // erase yellow in beak area before drawing
+  for (int i = 0; i < beak_height; ++i) {
+    int half = (beak_base * (beak_height - i)) / (2 * beak_height);
+    int row_y = cy + i;
+    int left = cx - half;
+    int width = half * 2 + 1;
+    drawHLine(left, row_y, width, BLACK);
+  }
+  
+  // draw orange beak
+  for (int i = 0; i < beak_height; ++i) {
+    int half = (beak_base * (beak_height - i)) / (2 * beak_height);
+    int row_y = cy + i; // grow downward from center
+    int left = cx - half;
+    int width = half * 2 + 1;
+    drawHLine(left, row_y, width, DARK_ORANGE);
+  }
 }
 
  void eraseDuck(int x, int y);
@@ -383,6 +416,9 @@ fillRect(left, 360, w, h - top_h, GREEN);
     if (duck_alive) {
       duck_alive = 0;
       shatterDuck();
+      // spawn a new random duck after shatter animation completes
+      sleep_ms(500);
+      spawnRandomDuck();
     }
   }
 }
@@ -403,6 +439,17 @@ fillRect(left, 360, w, h - top_h, GREEN);
     fillRect(x, sky_top, DUCK_W, top_h, CYAN);
     fillRect(x, 360, DUCK_W, bot_h, GREEN);
   }
+}
+
+// spawn a new random duck in the sky
+void spawnRandomDuck(void) {
+  duck_alive = 1;
+  // random x position: keep duck within screen bounds
+  duck_x = (rand() % (640 - DUCK_W));
+  // random y position: constrain to sky (0 to 360-DUCK_H)
+  duck_y = (rand() % (360 - DUCK_H));
+  drawDuck(duck_x, duck_y);
+  printf("New duck spawned at (%d, %d)\n", duck_x, duck_y);
 }
 /* this can be the static background*/
 int main() {
@@ -433,7 +480,7 @@ int main() {
   printf("Simulating shot at duck center (%d,%d)\n", duck_x + DUCK_W/2, duck_y + DUCK_H/2);
   handleShot(duck_x + DUCK_W/2, duck_y + DUCK_H/2);
 
-
+  // now enter game loop for continuous spawning
   while (1) {
     sleep_ms(1000);
   }
@@ -447,16 +494,15 @@ to do :
   -kind of like a shatter effect with pieces? (this might be nice)  --done and satisfied ish :D
   -make it change color to red when shot? -> might not be that hard 
 
-2) multiple ducks 
+2) multiple ducks (for now they spaw randomly in the sky)
   -they move into the screen from random heights and speeds
   -need to manage ducks (alive/dead, position, speed)
 
 3)make a nicer looking duck? 
-  - 2 black eyes and a orange triangle beak?
+  - 2 black eyes and a orange triangle beak? -> i tried but cant art :(
   -or 3 square's of differnent sizes (big body small face tiny tiny beak/tail)
 
 */
-
 
 
 
