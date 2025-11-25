@@ -30,9 +30,12 @@
 // Give the I/O pins that we're using some names that make sense - usable in main()
 //  enum vga_pins {HSYNC=16, VSYNC, LO_GRN, HI_GRN, BLUE_PIN, RED_PIN} ;
 
-// FROM 362 PROJECT GUIDE 
+// FROM 362 PROJECT GUIDE :
+
+/*So as long as the pins are all consecutive to each other with the HSYNC pin being the lowest GPIO pin, it should work.
+gonna shift this to test gpio 21*/
 enum vga_pins {
-    HSYNC=16, VSYNC, LO_GRN, HI_GRN, BLUE_PIN, RED_PIN 
+    HSYNC=15, VSYNC, LO_GRN, HI_GRN, BLUE_PIN, RED_PIN 
 };
 
 // We can only produce 16 (4-bit) colors, so let's give them readable names - usable in main()

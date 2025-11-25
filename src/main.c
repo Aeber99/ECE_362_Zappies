@@ -188,31 +188,133 @@
 
 
 //starting duck hunt logic here
+// draw a yellow rectangle and erase it
+// restore the sky color (keep duck in sky region?)
+ const int DUCK_W = 80;
+ const int DUCK_H = 80;
+
+// duck state1 (so hit can access it) -> is it okay for this to be global?
+int duck_x = 200;
+int duck_y = 80;
+int duck_alive = 1;
+
+ void drawDuck(int x, int y) {
+  fillRect(x, y, DUCK_W, DUCK_H, YELLOW);
+}
+
+ void eraseDuck(int x, int y);
+
+
+// hit detection: returns 1 if shot at (sx,sy)is within the duck box
+ int isShotInDuck(int sx, int sy) {
+  if (!duck_alive) return 0;
+  if (sx >= duck_x && sx < (duck_x + DUCK_W) && sy >= duck_y && sy < (duck_y + DUCK_H))
+    return 1;
+  return 0;
+}
+
+// kill logic: make the duck turn red and fall straight down, then disappear
+static void shatterDuck(void) {
+  // red square falling from the duck's current position
+  int prev_y = duck_y;
+
+  // draw initial red duck
+  fillRect(duck_x, prev_y, DUCK_W, DUCK_H, RED);
+  sleep_ms(50);
+
+  // step down until the rectangle reaches the bottom of the screen
+  while (prev_y + DUCK_H < 480) {
+    // erase the previous red rectangle by restoring the background
+    eraseDuck(duck_x, prev_y);
+
+    // move down a bit
+    prev_y += 4;
+
+    // draw at new position
+    fillRect(duck_x, prev_y, DUCK_W, DUCK_H, RED);
+    sleep_ms(30);
+  }
+
+  // final erase to remove the last red rectangle
+  eraseDuck(duck_x, prev_y);
+}
+
+// shot occurs at screen coordinates (sx,sy).
+// If it hits the duck, the duck will shatter
+ void handleShot(int sx, int sy) {
+  if (isShotInDuck(sx, sy)) {
+    if (duck_alive) {
+      duck_alive = 0;
+      shatterDuck();
+    }
+  }
+}
+
+ void eraseDuck(int x, int y) {
+  int sky_top = y;
+  int sky_bottom = y + DUCK_H;
+  if (sky_bottom <= 360) {
+    // fully in sky
+    fillRect(x, y, DUCK_W, DUCK_H, CYAN);
+  } else if (sky_top >= 360) {
+    // fully in grass
+    fillRect(x, y, DUCK_W, DUCK_H, GREEN);
+  } else {
+    // splits sky/grass: top part = CYAN, bottom part = GREEN
+    int top_h = 360 - sky_top;
+    int bot_h = sky_bottom - 360;
+    fillRect(x, sky_top, DUCK_W, top_h, CYAN);
+    fillRect(x, 360, DUCK_W, bot_h, GREEN);
+  }
+}
 /* this can be the static background*/
 int main() {
   stdio_init_all();
   initVGA();
 
-  //testing RGB 
-  fillRect(0, 0, 640, 480, BLACK);
-  fillRect(80, 40, 160, 120, RED);  // i don't see red :(
-  fillRect(260, 40, 160, 120, GREEN); // i see green
-  fillRect(170, 200, 160, 120, BLUE); // i see blue
+  // //testing RGB 
+  // fillRect(0, 0, 640, 480, BLACK);
+  // fillRect(80, 40, 160, 120, RED);  // i don't see red :( [-> think gpio 21 issue -> shows up now]
+  // fillRect(260, 40, 160, 120, GREEN); // i see green
+  // fillRect(170, 200, 160, 120, BLUE); // i see blue
 
-  // // // Draw sky and grass background
-  // fillRect(0, 0, 640, 360, CYAN);
-  // fillRect(0, 360, 640, 120, GREEN);
+  // // Draw sky and grass background
+  fillRect(0, 0, 640, 360, CYAN);
+  fillRect(0, 360, 640, 120, GREEN);
 
   // //testing to see if yellow shows up -> faintly but yes :)
   // fillRect(0, 0, 640, 480, CYAN);     // background
   // fillRect(200, 160, 80, 80, YELLOW); // yellow square on top
 
+  // draw a static duck (doesn't move ryt?)
+  duck_x = 200;
+  duck_y = 80;
+  if (duck_alive) drawDuck(duck_x, duck_y);
+
+  // simulate a shot after 2 seconds to test shattering
+  sleep_ms(5000);
+  printf("Simulating shot at duck center (%d,%d)\n", duck_x + DUCK_W/2, duck_y + DUCK_H/2);
+  handleShot(duck_x + DUCK_W/2, duck_y + DUCK_H/2);
 
 
   while (1) {
     sleep_ms(1000);
   }
 }
+
+/*
+to do :
+1) make kill logic more dramatic 
+  -spining duck? (idk how to do this)
+  -add sound?
+  -kind of like a shatter effect with pieces? (this might be nice)
+
+2) multiple ducks 
+  -they move into the screen from random heights and speeds
+  -need to manage ducks (alive/dead, position, speed)
+
+*/
+
 
 
 
