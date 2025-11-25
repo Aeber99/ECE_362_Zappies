@@ -73,7 +73,7 @@ to do :
   -spining duck? (idk how to do this)
   -add sound?
   -kind of like a shatter effect with pieces? (this might be nice)  --done and satisfied ish :D
-  -make it change color to red when shot? -> might not be that hard 
+  -make it change color to red when shot? -> might not be that hard (unsatisfying red doesnt show up well)
 
 2) multiple ducks (for now they spaw randomly in the sky)
   -they move into the screen from random heights and speeds

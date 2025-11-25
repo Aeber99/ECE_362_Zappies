@@ -306,11 +306,10 @@ void shatterDuck(void) {
     for (int ix = 0; ix < DUCK_W; ix += STEP) {
       int sx = duck_x + ix;
       int sy = duck_y + iy;
-      char c = (char) readPixel(sx, sy);
-
+      // particle color to RED when duck is shot so shatter is red
       part_x[n] = sx;
       part_y[n] = sy;
-      part_color[n] = c;
+      part_color[n] = RED;
       part_alive[n] = 1;
 
       // simple random diagonal-ish velocity
