@@ -9,7 +9,7 @@
 #include "vga16_graphics_v2.h"
 #include "pico/stdlib.h"
 #include "audio.h"
-
+#include <math.h>
 
 
 
@@ -208,6 +208,20 @@ int n = 0; // current count of particles created
 // shatter parameters
 const int FRAMES = 50;
 const int RADIUS = 60; // containment radius from center
+
+// for score detection
+int score = 0;
+int ducksHit = 0;
+int ducksMissed = 0;
+int ducksInRound = 0;
+int totalDucks = 0;
+
+// circular motion for duck
+float duckAngle = 0;
+float duckAngVel = 0.05;
+int duck_centerx;
+int duck_centery;
+int duck_radius = 50;
 
 void drawDuck(int x, int y) {
   // black first so the yellow is visible
@@ -427,6 +441,8 @@ void handleShot(int sx, int sy) {
       duck_alive = 0;
       // play short shot buzz
       audio_play_shot();
+      score += 1000; // score increment
+      ducksHit++;
       shatterDuck();
       // spawn a new random duck after shatter animation completes
       sleep_ms(500);
@@ -440,11 +456,63 @@ void spawnRandomDuck(void) {
   duck_alive = 1;
   // random x position: keep duck within screen bounds
   duck_x = (rand() % (640 - DUCK_W));
+
+  duck_centerx = duck_x; // for tracking positions globally?
   // random y position: constrain to sky (0 to 360-DUCK_H)
   duck_y = (rand() % (360 - DUCK_H));
+
+  duck_centery = duck_y; // tracking positions globally?
+
   drawDuck(duck_x, duck_y);
   printf("New duck spawned at (%d, %d)\n", duck_x, duck_y);
 }
 
 
+// ~~~~~~~~~~ note: test this in lab ~~~~~~~~~~~~~~~~
 
+void drawScoreBox(void){
+  // 640 x 480
+
+  // clear area
+  fillRect(0, 0, 640, 480, CYAN); // covers whole screen when done playing?
+
+  // Big title in the middle
+  char buf[32]; 
+
+  setTextColorBig(WHITE, BLACK);
+  setCursor(120, 60);
+  writeStringBig("GAME OVER!");
+
+  setTextColorBig(WHITE, BLACK);
+  setCursor(120, 140);
+  sprintf(buf, "SCORE: %d", score);
+  writeStringBig(buf);
+
+  sprintf(buf, "HIT %d    MISSED: %d", ducksHit, ducksMissed);
+  setCursor(120, 200);
+  writeStringBig(buf);
+
+}
+
+void resetRound(){
+  score = 0;
+  ducksHit = 0;
+  ducksMissed = 0;
+  ducksInRound = 0;
+  spawnRandomDuck(); //resets the round (no bkg)
+}
+
+
+void circularDuckMotion(){
+  eraseDuck(duck_x, duck_y);
+  duckAngle += duckAngVel;
+
+  if(duckAngle >= 2 * 3.14){ // no going past circle
+    duckAngle -= 2 * 3.14;
+  }
+  // new positions updated
+  duck_x = duck_centerx + ((int)((duck_radius * cosf(duckAngle)) - DUCK_W) / 2);
+  duck_y = duck_centery + ((int)((duck_radius * cosf(duckAngle)) - DUCK_H) / 2);
+
+  drawDuck(duck_x, duck_y);
+}
