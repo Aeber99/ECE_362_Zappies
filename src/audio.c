@@ -3,7 +3,8 @@
 #include "hardware/pwm.h"
 #include "hardware/clocks.h"
 
-#define AUDIO_PIN 33
+#define AUDIO_PIN 45
+
 
 void audio_init(void) {
     gpio_set_function(AUDIO_PIN, GPIO_FUNC_PWM);
