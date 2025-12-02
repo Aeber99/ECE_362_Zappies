@@ -38,9 +38,9 @@
 
 typedef enum {
     START = 0,      // Let player interface to start game (goto WAIT)
-    WAIT = 1,       // Wait for bird to appear (goto BIRD)
-    BIRD = 2,       // Bird has appeared (goto CHECK if gun is triggered, goto MISS if times up)
-    CHECK = 3,    // Respond to gun trigger (goto to BIRD if missed, goto HIT if hit)
+    WAIT = 1,       // Wait for BALLOON to appear (goto BALLOON)
+    BALLOON = 2,       // BALLOON has appeared (goto CHECK if gun is triggered, goto MISS if times up)
+    CHECK = 3,    // Respond to gun trigger (goto to BALLOON if missed, goto HIT if hit)
     HIT = 4,        // Indicate hit (goto WAIT if game is still going, goto FINISH if game is done)
     MISS = 5,       // Indicate miss (goto WAIT if game is still going, goto FINISH if game is done)
     FINISH = 6      // Show score (goto WAIT when player is ready)
@@ -57,7 +57,7 @@ int long_timer_done = 0;
 // int main() {
 //   stdio_init_all();
 //   initVGA();
-//   init_inputs();
+  //  init_inputs();
 //   audio_init();
 
 //   // seed random number generator -> otherwise same sequence every time
@@ -163,7 +163,20 @@ int long_timer_done = 0;
 
 int main() {
     stdio_init_all();
+  initVGA();
+  init_inputs();
+  audio_init();
     init_dummy_controls();
+  // Show intro screen: black background, big title
+  fillRect(0, 0, 640, 480, BLACK);
+  // Big title in the middle
+  setTextColorBig(WHITE, BLACK);
+  setCursor(120, 140);
+  writeStringBig("BALLOON POP");
+  // small prompt
+  setTextColor(WHITE);
+  setCursor(260, 360);
+  writeStringBig("Press button to start");
 
     // START logic
     
@@ -187,11 +200,11 @@ int main() {
             printf("Waiting\n");
             seed = get_rand_32() % 30;
             init_game_timer_short(seed * 100000 + 4000000);
-            // timer short should isr should move state to BIRD
+            // timer short should isr should move state to BALLOON
             while (game_state == WAIT);
 
-            // BIRD Logic
-            printf("BIRD\n");
+            // BALLON Logic
+            printf("BALLOoN\n");
             seed = get_rand_32() % 30;
             init_game_timer_short(seed * 100000 + 5000000);
             while (game_state != WAIT);
