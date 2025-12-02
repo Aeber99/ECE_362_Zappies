@@ -199,7 +199,7 @@ int part_y[MAX_PARTICLES];
 // velocity of the pieces -> dont need?
 int part_vx[MAX_PARTICLES];
 int part_vy[MAX_PARTICLES];
-// -> dont need?->unless we try to get it to turn red on shot
+// -> dont need?->unless we trsleep_msy to get it to turn red on shot
 char part_color[MAX_PARTICLES];
 // -> to check if within the radius -> if outside then 0( it ded)
 int part_alive[MAX_PARTICLES];
