@@ -40,3 +40,12 @@ void audio_play_shot(void) {
     audio_play_tone(1400, 40);
     audio_play_tone(900, 50);
 }
+
+
+/*
+to do :
+1) replace sine wave with square wave
+2) replace all sleep with timers
+3) create ISRs to change freq of PWM
+4) create fake "state machine" to time music note sequences
+*/

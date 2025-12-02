@@ -29,6 +29,7 @@
 #include "hardware/dma.h"
 #include "hardware/clocks.h"
 #include "audio.h"
+#include "led.h"
 
 
 /* this can be the static background*/
@@ -86,6 +87,22 @@ int main() {
   while (1) {
     sleep_ms(1000);
   }
+
+    // stdio_init_all();
+    // display_init_spi();
+    // for (;;) {
+    //   for(int i = 0; i < 8; i++){
+    //     display_print(i);
+    //     printf("LED %d\n", i);
+    //     sleep_ms(500);
+    //   }
+        
+    // }
+
+    // for(;;);
+    // return 0;
+
+
 }
 
 /*
