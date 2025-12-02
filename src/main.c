@@ -1,8 +1,6 @@
 /**
  * Hunter Adams (vha3@cornell.edu)
  * 
- * Conway's Game of Life
- * Uses PIO-assembly VGA driver
  *
  * HARDWARE CONNECTIONS
    - GPIO 16 ---> VGA Hsync 
@@ -12,122 +10,142 @@
    - GPIO 20 ---> 330 ohm resistor ---> VGA-Blue 
    - GPIO 21 ---> 330 ohm resistor ---> VGA-Red 
    - RP2040 GND ---> VGA-GND
- * 
+ *
  * RESOURCES USED
  *  - PIO state machines 0, 1, and 2 on PIO instance 0
  *  - DMA channels obtained by claim mechanism
  *  - 153.6 kBytes of RAM (for pixel color data)
  *
  */
+
+// VGA graphics library
 #include "vga16_graphics_v2.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "pico/stdlib.h"
+#include "hardware/clocks.h"
 #include "hardware/pio.h"
 #include "hardware/dma.h"
-#include "hardware/clocks.h"
 
+// Some globals for storing timer information
+volatile unsigned int time_accum = 0;
+unsigned int time_accum_old = 0 ;
+char timetext[40];
+
+// Timer interrupt
+bool repeating_timer_callback(struct repeating_timer *t) {
+
+    time_accum += 1 ;
+    return true;
+}
 
 
 int main() {
-
-    // Overclock
-    // set_sys_clock_khz(150000, true) ;
-
+    // overclock
+    set_sys_clock_khz(120000, true) ;
+    
     // Initialize stdio
     stdio_init_all();
 
-    // Initialize VGA
+    // Initialize the VGA screen
     initVGA() ;
 
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////// Game of Life ////////////////
-    /////////////////////////////////////////////////////////////////////
+    // circle radii
+    short circle_x = 0 ;
 
-    // Initialize the screen (specific eternal growth initial conditions)
-    drawCell(160, -50+70, WHITE) ;
-    drawCell(160, -50+71, WHITE) ;
-    drawCell(160, -50+72, WHITE) ;
-    drawCell(160, -50+73, WHITE) ;
-    drawCell(160, -50+74, WHITE) ;
-    drawCell(160, -50+75, WHITE) ;
-    drawCell(160, -50+76, WHITE) ;
-    drawCell(160, -50+77, WHITE) ;
+    // color chooser
+    char color_index = 0 ;
 
-    drawCell(160, -50+79, WHITE) ;
-    drawCell(160, -50+80, WHITE) ;
-    drawCell(160, -50+81, WHITE) ;
-    drawCell(160, -50+82, WHITE) ;
-    drawCell(160, -50+83, WHITE) ;
+    // position of the disc primitive
+    short disc_x = 0 ;
+    // position of the box primitive
+    short box_x = 0 ;
+    // position of vertical line primitive
+    short Vline_x = 350;
+    // position of horizontal line primitive
+    short Hline_y = 250;
 
-    drawCell(160, -50+87, WHITE) ;
-    drawCell(160, -50+88, WHITE) ;
-    drawCell(160, -50+89, WHITE) ;
+    // Draw some filled rectangles
+    fillRect(64, 0, 176, 50, BLUE); // blue box
+    fillRect(250, 0, 176, 50, RED); // red box
+    fillRect(435, 0, 176, 50, GREEN); // green box
 
-    drawCell(160, -50+96, WHITE) ;
-    drawCell(160, -50+97, WHITE) ;
-    drawCell(160, -50+98, WHITE) ;
-    drawCell(160, -50+99, WHITE) ;
-    drawCell(160, -50+100, WHITE) ;
-    drawCell(160, -50+101, WHITE) ;
-    drawCell(160, -50+102, WHITE) ;
+    // Write some text
+    setTextColor(WHITE) ;
+    setCursor(65, 0) ;
+    setTextSize(1) ;
+    writeString("Raspberry Pi Pico") ;
+    setCursor(65, 10) ;
+    writeString("Graphics primitives demo") ;
+    setCursor(65, 20) ;
+    writeString("Hunter Adams") ;
+    setCursor(65, 30) ;
+    writeString("vha3@cornell.edu") ;
+    setCursor(65, 40) ;
+    writeString("4-bit mod by Bruce Land") ;
+    setCursor(250, 0) ;
+    setTextSize(2) ;
+    writeString("Time Elapsed:") ;
 
-    drawCell(160, -50+104, WHITE) ;
-    drawCell(160, -50+105, WHITE) ;
-    drawCell(160, -50+106, WHITE) ;
-    drawCell(160, -50+107, WHITE) ;
-    drawCell(160, -50+108, WHITE) ;
-    
-    int i = 0 ;
-    int j = 0 ;
-    char saved_row[320] = {BLACK} ;
-    char updated_row[320] = {BLACK} ;
-    int saved_row_num = 238 ;
+    // Setup a 1Hz timer
+    struct repeating_timer timer;
+    add_repeating_timer_ms(-1000, repeating_timer_callback, NULL, &timer);
 
-    int living ;
-    int neighbors ;
+    drawPixel(300, 300, 12);
+    while(true) {
+        
+        fillRect(100, 100, 50, 50, 0);
+        sleep_ms(100);
+        fillRect(100, 100, 50, 50, 9);
+        sleep_ms(100);
 
-    uint32_t start_time ;
-    uint32_t end_time ;
+        // fillRect(0,0, 640, 480, GREEN);        
+        
+        // // Modify the color chooser
+        // if (color_index ++ == 15) color_index = 0 ;
 
-    while(1) {
+        // // A row of filled circles
+        // fillCircle(disc_x, 100, 20, color_index);
+        // disc_x += 35 ;
+        // if (disc_x > 640) disc_x = 0;
+        
+        // // Concentric empty circles
+        // drawCircle(320, 200, circle_x, color_index);
+        // circle_x += 1 ;        
+        // if (circle_x > 130) circle_x = 0;
 
-        start_time = time_us_32() ;
+        // // A series of rectangles
+        // drawRect(10, 300, box_x, box_x, color_index);
+        // box_x += 5 ;
+        // if (box_x > 195) box_x = 10;
 
-        for (j=1; j<239; j++) {
-            for (i=1; i<319; i++) {
-                // Check if cell is alive, and get number of neighbors
-                living = isAlive(i, j) ;
-                neighbors = checkNeighbors(i, j) ;
+        // // Random lines
+        // drawLine(210+(rand()&0x7f), 350+(rand()&0x7f), 210+(rand()&0x7f), 
+        //          350+(rand()&0x7f), color_index);
 
-                // Apply rules, save living/dead status in saved_row array
-                if (living && ((neighbors==2) || (neighbors==3))) {
-                    updated_row[i] = WHITE ;
-                }
+        // // Vertical lines
+        // drawVLine(Vline_x, 300, (Vline_x>>2), color_index);
+        // Vline_x += 2 ;
+        // if (Vline_x > 620) Vline_x = 350;
+        
+        // // Horizontal lines
+        // drawHLine(400, Hline_y, 150, color_index);
+        // Hline_y += 2 ;
+        // if (Hline_y > 400) Hline_y = 240;
 
-                else if (!living && (neighbors==3)) {
-                    updated_row[i] = WHITE ;
-                }
+        // // Timing text
+        // if (time_accum != time_accum_old) {
+        //     time_accum_old = time_accum ;
+        //     fillRect(250, 20, 176, 30, RED); // red box
+        //     sprintf(timetext, "%d", time_accum) ;
+        //     setCursor(250, 20) ;
+        //     setTextSize(2) ;
+        //     writeString(timetext) ;
+        // }
 
-                else {
-                    updated_row[i] = BLACK ;
-                }
-            }
-            // Draw the saved row
-            for (i=0; i<319; i++) {
-                drawCell(i, saved_row_num, saved_row[i]) ;
-            }
-            // Move the updated row to the saved row
-            memcpy(saved_row, updated_row, 320) ;
-            // Increment the saved row number, wrapping at 318
-            saved_row_num += 1 ;
-            if (saved_row_num >= 239) {
-                saved_row_num = 1 ;
-            }
-        }
+        // A brief nap
+        // sleep_us(10) ;
 
-        end_time = time_us_32() ;
-        printf("Time to animate: %f\n", (float)(end_time-start_time)*(1./1000000.)) ;
-    }
+   }
+
 }
