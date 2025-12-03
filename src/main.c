@@ -55,108 +55,108 @@
 // int long_timer_done = 0;
 
 
-/* this can be the static background*/
+// /* this can be the static background*/
 // int main() {
-  // stdio_init_all();
-  // initVGA();
-  //  init_inputs();
-  // audio_init();
+//   stdio_init_all();
+//   initVGA();
+//    init_inputs();
+//   audio_init();
 
-  // // seed random number generator -> otherwise same sequence every time
-  // srand(time_us_32());
+//   // // seed random number generator -> otherwise same sequence every time
+//   // srand(time_us_32());
 
-  // // //testing RGB 
-  // // fillRect(0, 0, 640, 480, BLACK);
-  // // fillRect(80, 40, 160, 120, RED);  // i don't see red :( [-> think gpio 21 issue -> shows up now]
-  // // fillRect(260, 40, 160, 120, GREEN); // i see green
-  // // fillRect(170, 200, 160, 120, BLUE); // i see blue
-
-
-  // // Show intro screen: black background, big title
-  // fillRect(0, 0, 640, 480, BLACK);
-  // // Big title in the middle
-  // setTextColorBig(WHITE, BLACK);
-  // setCursor(120, 140);
-  // writeStringBig("DUCK HUNT");
-  // // small prompt
-  // setTextColor(WHITE);
-  // setCursor(260, 360);
-  // writeStringBig("Press button to start");
-
-  // // press the button
-  // wait_for_button_press();
-
-  // // Start game screen: draw background and spawn initial duck
-  // // // Draw sky and grass background
-  // fillRect(0, 0, 640, 360, CYAN);
-  // fillRect(0, 360, 640, 120, GREEN);
-
-  // // //testing to see if yellow shows up -> faintly but yes :)
-  // // fillRect(0, 0, 640, 480, CYAN);     // background
-  // // fillRect(200, 160, 80, 80, YELLOW); // yellow square on top
-
-  // // draw a static duck (doesn't move ryt?)
-  // duck_x = 200;
-  // duck_y = 80;
-  // if (duck_alive) drawDuck(duck_x, duck_y);
-
-  // // simulate a shot after 2 seconds to test shattering
-  // sleep_ms(5000);
-  // printf("Simulating shot at duck center (%d,%d)\n", duck_x + DUCK_W/2, duck_y + DUCK_H/2);
-  // handleShot(duck_x + DUCK_W/2, duck_y + DUCK_H/2);
+//   // // //testing RGB 
+//   // // fillRect(0, 0, 640, 480, BLACK);
+//   // // fillRect(80, 40, 160, 120, RED);  // i don't see red :( [-> think gpio 21 issue -> shows up now]
+//   // // fillRect(260, 40, 160, 120, GREEN); // i see green
+//   // // fillRect(170, 200, 160, 120, BLUE); // i see blue
 
 
-  // // now enter game loop for continuous spawning
-  // while (1) {
-  //   sleep_ms(1000);
-  // }
+//   // // Show intro screen: black background, big title
+//   // fillRect(0, 0, 640, 480, BLACK);
+//   // // Big title in the middle
+//   // setTextColorBig(WHITE, BLACK);
+//   // setCursor(120, 140);
+//   // writeStringBig("DUCK HUNT");
+//   // // small prompt
+//   // setTextColor(WHITE);
+//   // setCursor(260, 360);
+//   // writeStringBig("Press button to start");
 
-    // stdio_init_all();
-    // display_init_spi();
-    // for (;;) {
-    //   for(int i = 0; i < 8; i++){
-    //     display_print(i);
-    //     printf("LED %d\n", i);
-    //     sleep_ms(500);
-    //   }
+//   // // press the button
+//   // wait_for_button_press();
+
+//   // // Start game screen: draw background and spawn initial duck
+//   // // // Draw sky and grass background
+//   // fillRect(0, 0, 640, 360, CYAN);
+//   // fillRect(0, 360, 640, 120, GREEN);
+
+//   // // //testing to see if yellow shows up -> faintly but yes :)
+//   // // fillRect(0, 0, 640, 480, CYAN);     // background
+//   // // fillRect(200, 160, 80, 80, YELLOW); // yellow square on top
+
+//   // // draw a static duck (doesn't move ryt?)
+//   // duck_x = 200;
+//   // duck_y = 80;
+//   // if (duck_alive) drawDuck(duck_x, duck_y);
+
+//   // // simulate a shot after 2 seconds to test shattering
+//   // sleep_ms(5000);
+//   // printf("Simulating shot at duck center (%d,%d)\n", duck_x + DUCK_W/2, duck_y + DUCK_H/2);
+//   // handleShot(duck_x + DUCK_W/2, duck_y + DUCK_H/2);
+
+
+//   // // now enter game loop for continuous spawning
+//   // while (1) {
+//   //   sleep_ms(1000);
+//   // }
+
+//     stdio_init_all();
+//     display_init_spi();
+//     for (;;) {
+//       for(int i = 0; i < 8; i++){
+//         display_print(i);
+//         printf("LED %d\n", i);
+//         sleep_ms(500);
+//       }
         
-    // }
+//     }
 
-    // for(;;);
-    // return 0;
-
-
-
-
-// // /*
-// // to do :    
-// // 1) make kill logic more dramatic 
-// //   -spining duck? (idk how to do this)
-// //   -add sound?
-// //   -kind of like a shatter effect with pieces? (this might be nice)  --done and satisfied ish :D
-// //   -make it change color to red when shot? -> might not be that hard (unsatisfying red doesnt show up well)
-
-// // 2) multiple ducks (for now they spaw randomly in the sky)
-// //   -they move into the screen from random heights and speeds
-// //   -need to manage ducks (alive/dead, position, speed)
-
-// // 3)make a nicer looking duck? 
-// //   - 2 black eyes and a orange triangle beak? -> i tried but cant art :(
-// //   -or 3 square's of differnent sizes (big body small face tiny tiny beak/tail)
-
-// // */
+//     for(;;);
+//     return 0;
 
 
 
-// // //further to do :
 
-// //     // for (;;) {
-// //     //     printf("Hello world!\n");
-// //     //     sleep_ms(1000);
-// //     // }
+// // // /*
+// // // to do :    
+// // // 1) make kill logic more dramatic 
+// // //   -spining duck? (idk how to do this)
+// // //   -add sound?
+// // //   -kind of like a shatter effect with pieces? (this might be nice)  --done and satisfied ish :D
+// // //   -make it change color to red when shot? -> might not be that hard (unsatisfying red doesnt show up well)
 
-// //     // Code for testing gun
-// //     init_gun(21, 26);
+// // // 2) multiple ducks (for now they spaw randomly in the sky)
+// // //   -they move into the screen from random heights and speeds
+// // //   -need to manage ducks (alive/dead, position, speed)
+
+// // // 3)make a nicer looking duck? 
+// // //   - 2 black eyes and a orange triangle beak? -> i tried but cant art :(
+// // //   -or 3 square's of differnent sizes (big body small face tiny tiny beak/tail)
+
+// // // */
+
+
+
+// // // //further to do :
+
+// // //     // for (;;) {
+// // //     //     printf("Hello world!\n");
+// // //     //     sleep_ms(1000);
+// // //     // }
+
+// // //     // Code for testing gun
+// // //     init_gun(21, 26);
     
 // }
 
@@ -169,7 +169,9 @@ int main() {
   init_inputs();
   audio_init();
 
-
+  // START logic
+  // *************
+  // Write code for start screen logic
   // Show intro screen: black background, big title
   fillRect(0, 0, 640, 480, BLACK);
   // Big title in the middle
@@ -179,15 +181,14 @@ int main() {
   // small prompt
   setTextColor(WHITE);
   setCursor(260, 360);
-  writeStringBig("Press button to start");
+  writeStringBig("Press button to start game");
   init_dummy_controls();
 
-
-    // START logic
-    // *************
-    // Write code for start screen logic
-    printf("Press buttton to start game\n");
-    // dummy_control should move state to WAIT
+  
+  // press the button
+  wait_for_button_press();    
+  
+  // dummy_control should move state to WAIT
     while (game_state == START);
     // **************
 
@@ -223,6 +224,13 @@ int main() {
         printf("Press buttton to play again\n");
         // dummy_control should move state to WAIT
         while (game_state == FINISH);
+  fillRect(0, 0, 640, 480, BLACK);
+  setTextColorBig(WHITE, BLACK);
+  setCursor(120, 140);
+  writeStringBig("GAME FINISHED");
+  setTextColor(WHITE);
+  setCursor(260, 360);
+  writeStringBig("Press buttton to play again");
         // **************
     for(;;);
     return 0;

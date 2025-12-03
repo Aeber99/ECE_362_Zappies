@@ -12,8 +12,9 @@ const int SPI_7SEG_TX = 27; // Replace with your TX pin number for the 7-segment
 
 const int LED_PWM = 40;
 
-void display_init_spi()
+void display_init_spi(uint32_t freq_hz)
 {
+
     // fill in    
     gpio_set_function(SPI_7SEG_SCK, GPIO_FUNC_SPI);
     gpio_set_function(SPI_7SEG_TX, GPIO_FUNC_SPI);
@@ -31,9 +32,16 @@ void display_init_spi()
 
     //we want 15.7 Khz PWM for LED brightness control
     uint32_t sys_hz = clock_get_hz(clk_sys);
-    float clkdiv = (float)sys_hz / 15700.0f;
+    // float clkdiv = (float)sys_hz / 1570000.0f;
+    float clkdiv = (float)sys_hz / 1000000.0f;
     pwm_set_clkdiv(slice_num, clkdiv);
     
+    // uint32_t wrap = 1000000u / freq_hz;
+    uint32_t wrap = 1000000u / 10000; // 15.7 kHz
+    pwm_set_wrap(slice_num, wrap - 1);
+    pwm_set_chan_level(slice_num, channel, (wrap - 1) / 2);
+
+
     pwm_set_chan_level(slice_num, channel, 10); //highest possible duty cycle
     pwm_set_enabled(slice_num, true);
     // sleep_ms(10);
