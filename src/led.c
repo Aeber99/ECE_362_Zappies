@@ -12,7 +12,7 @@ const int SPI_7SEG_TX = 27; // Replace with your TX pin number for the 7-segment
 
 const int LED_PWM = 40;
 
-void display_init_spi(uint32_t freq_hz)
+void init_hit_sensor()
 {
 
     // fill in    
@@ -49,9 +49,16 @@ void display_init_spi(uint32_t freq_hz)
     // pwm_set_chan_level(slice_num, channel, 0);
 }
 
-void display_print(int id) {
+void activate_hit_sensor(int id) {
     // fill in   
-    uint16_t led_id = 1 << id;
+    printf("flag\n");
+    uint16_t led_id;
+    if (id == -1) {
+        led_id = 0;
+    } else {
+        led_id = 1 << id;
+    }
+    
     spi_write16_blocking(spi1, &led_id, 1);
 }
 

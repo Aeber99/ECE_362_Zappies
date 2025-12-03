@@ -56,61 +56,61 @@
 
 
 /* this can be the static background*/
-int main() {
-  stdio_init_all();
-  initVGA();
-  init_inputs();
-  audio_init();
-int index=0;
-//   // seed random number generator -> otherwise same sequence every time
-//   srand(time_us_32());
+// int main() {
+//   stdio_init_all();
+//   initVGA();
+//   init_inputs();
+//   audio_init();
+// int index=0;
+// //   // seed random number generator -> otherwise same sequence every time
+// //   srand(time_us_32());
 
-//   // //testing RGB 
-//   // fillRect(0, 0, 640, 480, BLACK);
-//   // fillRect(80, 40, 160, 120, RED);  // i don't see red :( [-> think gpio 21 issue -> shows up now]
-//   // fillRect(260, 40, 160, 120, GREEN); // i see green
-//   // fillRect(170, 200, 160, 120, BLUE); // i see blue
+// //   // //testing RGB 
+// //   // fillRect(0, 0, 640, 480, BLACK);
+// //   // fillRect(80, 40, 160, 120, RED);  // i don't see red :( [-> think gpio 21 issue -> shows up now]
+// //   // fillRect(260, 40, 160, 120, GREEN); // i see green
+// //   // fillRect(170, 200, 160, 120, BLUE); // i see blue
 
 
-//   // Show intro screen: black background, big title
-//   fillRect(0, 0, 640, 480, BLACK);
-//   // Big title in the middle
-//   setTextColorBig(WHITE, BLACK);
-//   setCursor(120, 140);
-//   writeStringBig("DUCK HUNT");
-//   // small prompt
-//   setTextColor(WHITE);
-//   setCursor(260, 360);
-//   writeStringBig("Press button to start");
+// //   // Show intro screen: black background, big title
+// //   fillRect(0, 0, 640, 480, BLACK);
+// //   // Big title in the middle
+// //   setTextColorBig(WHITE, BLACK);
+// //   setCursor(120, 140);
+// //   writeStringBig("DUCK HUNT");
+// //   // small prompt
+// //   setTextColor(WHITE);
+// //   setCursor(260, 360);
+// //   writeStringBig("Press button to start");
 
-//   // press the button
+// //   // press the button
+// //   wait_for_button_press();
+
+// //   // Start game screen: draw background and spawn initial duck
+// //   // // Draw sky and grass background
+//   fillRect(0, 0, 640, 360, CYAN);
+//   fillRect(0, 360, 640, 120, GREEN);
+
+// //   // //testing to see if yellow shows up -> faintly but yes :)
+// //   // fillRect(0, 0, 640, 480, CYAN);     // background
+// //   // fillRect(200, 160, 80, 80, YELLOW); // yellow square on top
+
+// //   // draw a static duck (doesn't move ryt?)
+// //   duck_x = 200;
+// //   duck_y = 80;
+//   if (duck_alive) spawn_duck_at_index(index);
 //   wait_for_button_press();
-
-//   // Start game screen: draw background and spawn initial duck
-//   // // Draw sky and grass background
-  fillRect(0, 0, 640, 360, CYAN);
-  fillRect(0, 360, 640, 120, GREEN);
-
-//   // //testing to see if yellow shows up -> faintly but yes :)
-//   // fillRect(0, 0, 640, 480, CYAN);     // background
-//   // fillRect(200, 160, 80, 80, YELLOW); // yellow square on top
-
-//   // draw a static duck (doesn't move ryt?)
-//   duck_x = 200;
-//   duck_y = 80;
-  if (duck_alive) spawn_duck_at_index(index);
-  wait_for_button_press();
-  erase_current_duck();
-  index = (index + 1);
-  if (duck_alive) spawn_duck_at_index(index);
-  wait_for_button_press();
-  erase_current_duck();
-  index = (index + 1);
-  if (duck_alive) spawn_duck_at_index(index);
-  wait_for_button_press();
-  erase_current_duck();
-  index = (index + 1);
-  if (duck_alive) spawn_duck_at_index(index);
+//   erase_current_duck();
+//   index = (index + 1);
+//   if (duck_alive) spawn_duck_at_index(index);
+//   wait_for_button_press();
+  // erase_current_duck();
+//   index = (index + 1);
+//   if (duck_alive) spawn_duck_at_index(index);
+//   wait_for_button_press();
+//   erase_current_duck();
+//   index = (index + 1);
+//   if (duck_alive) spawn_duck_at_index(index);
 
 //   // simulate a shot after 2 seconds to test shattering
 //   sleep_ms(5000);
@@ -171,7 +171,7 @@ int index=0;
 // // //     // Code for testing gun
 // // //     init_gun(21, 26);
     
-}
+// }
 
 
 
@@ -206,85 +206,97 @@ void spawn_duck_at_index(int index) {
     current_duck_index = -1;
 }  
 
-// int main() {
-//   stdio_init_all();
-//   initVGA();
-//   init_inputs();
-//   audio_init();
+int main() {
+  stdio_init_all();
+  initVGA();
+  init_inputs();
+  audio_init();
 
-//   // START logic
-//   // *************
-//   // Write code for start screen logic
-//   // Show intro screen: black background, big title
-//   fillRect(0, 0, 640, 480, BLACK);
-//   // Big title in the middle
-//   setTextColorBig(WHITE, BLACK);
-//   setCursor(120, 140);
-//   writeStringBig("DUCK POP");
-//   // small prompt
-//   setTextColor(WHITE);
-//   setCursor(260, 360);
-//   writeStringBig("Press button to start game");
-//   // press the button
-//   wait_for_button_press();
+  init_hit_sensor();
+  activate_hit_sensor(-1);
 
-//   // init_dummy_controls();
-//   dummy_controls_isr();
+  // START logic
+  // *************
+  // Write code for start screen logic
+  // Show intro screen: black background, big title
+  fillRect(0, 0, 640, 480, BLACK);
+  // Big title in the middle
+  setTextColorBig(WHITE, BLACK);
+  setCursor(120, 140);
+  writeStringBig("DUCK POP");
+  // small prompt
+  setTextColor(WHITE);
+  setCursor(260, 360);
+  writeStringBig("Press button to start game");
+  // press the button
+  // wait_for_button_press();
 
-//   // press the button
-//   // wait_for_button_press();    
+  init_dummy_controls();
+  // dummy_controls_isr();
+
+  // press the button
+  // wait_for_button_press();    
   
-//   // dummy_control should move state to WAIT
-//     while (game_state == START);
-//     // **************
+  // dummy_control should move state to WAIT
+    while (game_state == START);
+    // **************
 
-//     // Start long timer
-//     init_game_timer_long(60000000); // Game last: 60 seconds
-//     // fillRect(0, 0, 640, 480, BLACK);
-//     fillRect(0, 0, 640, 360, CYAN);
-//     fillRect(0, 360, 640, 120, GREEN);
+    // Start long timer
+    init_game_timer_long(60000000); // Game last: 60 seconds
+    // fillRect(0, 0, 640, 480, BLACK);
+    fillRect(0, 0, 640, 360, CYAN);
+    fillRect(0, 360, 640, 120, GREEN);
 
-//     for (;;) {
-//         // Reset score
-//         score = 0;
-//         // Run as long as long timer is going
-//         while(long_timer_done == 0) {
-//             // WAIT Logic
-//             printf("Waiting\n");
-//             seed = get_rand_32() % 30;
-//             init_game_timer_short(seed * 100000 + 4000000);
-//             // timer short should isr should move state to DUCK
-//             while (game_state == WAIT);
-//             // DUCK Logic
-//             printf("DUCK\n");
-//             seed = get_rand_32() % 30;
-//             init_game_timer_short(seed * 100000 + 5000000);
-//             while (game_state != WAIT);
-//         }
+    for (;;) {
+        // Reset score
+        score = 0;
+        // Run as long as long timer is going
+        while(long_timer_done == 0) {
+            // WAIT Logic
+            printf("Waiting\n");
+            seed = get_rand_32() % 30;
+            init_game_timer_short(seed * 100000 + 4000000);
+            // timer short should isr should move state to DUCK
+            while (game_state == WAIT);
+            
+            // DUCK Logic
+            printf("DUCK\n");
+            seed = get_rand_32() % 3;
+            spawn_duck_at_index(seed + 3);
+            activate_hit_sensor(seed + 1);
 
-//         // FINISH logic
-//         // *************
-//         // Write code for finish screen logic
-//         printf("Game finished!\n");
-//         printf("Score: %d\n", (int)score);
-//         printf("Press buttton to play again\n");
-//         // dummy_control should move state to WAIT
-//         while (game_state == FINISH);
-//         fillRect(0, 0, 640, 480, BLACK);
-//         setTextColorBig(WHITE, BLACK);
-//         setCursor(120, 140);
-//         writeStringBig("GAME FINISHED");
-//         setTextColor(WHITE);
-//         setCursor(260, 360);
-//         writeStringBig("Press buttton to play again");
-//         // press the button
-//         wait_for_button_press();
-//         //make a seperate function for all the logic so it can be called again
-//         // **************
-//     for(;;);
-//     return 0;
-//     }
-// }
+            seed = get_rand_32() % 30;
+            init_game_timer_short(seed * 100000 + 5000000);
+            while (game_state != WAIT);
+
+            erase_current_duck();
+            activate_hit_sensor(-1);
+
+        }
+
+        // FINISH logic
+        // *************
+        // Write code for finish screen logic
+        printf("Game finished!\n");
+        printf("Score: %d\n", (int)score);
+        printf("Press buttton to play again\n");
+        // dummy_control should move state to WAIT
+        while (game_state == FINISH);
+        fillRect(0, 0, 640, 480, BLACK);
+        setTextColorBig(WHITE, BLACK);
+        setCursor(120, 140);
+        writeStringBig("GAME FINISHED");
+        setTextColor(WHITE);
+        setCursor(260, 360);
+        writeStringBig("Press buttton to play again");
+        // press the button
+        wait_for_button_press();
+        //make a seperate function for all the logic so it can be called again
+        // **************
+    for(;;);
+    return 0;
+    }
+}
 
 
 /*

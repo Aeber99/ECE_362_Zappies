@@ -41,7 +41,7 @@ void game_timer_isr_short() {
     // }
         // if (game_state == BIRD) {
     } else if (game_state == BALLOON) {
-        printf("BALLOON popped away\n");
+        printf("Duck flew away\n");
         game_state = WAIT;
     } else if (game_state == HIT) {
         game_state = WAIT;
@@ -144,14 +144,14 @@ writeStringBig(buf);
 
 
 void dummy_controls_isr() {
-    // if (gpio_get_irq_event_mask(21) & GPIO_IRQ_EDGE_RISE) {
-    //     gpio_acknowledge_irq(21, GPIO_IRQ_EDGE_RISE);
-    // }
-    // printf("Press\n");
+    if (gpio_get_irq_event_mask(21) & GPIO_IRQ_EDGE_RISE) {
+        gpio_acknowledge_irq(21, GPIO_IRQ_EDGE_RISE);
+    }
+    printf("Press\n");
 
     if (game_state ==  START) {
         update_score(0);
-    printf("Start\n");
+        printf("Start\n");
         game_state = WAIT;
     } else if (game_state == BALLOON) {
         // CHECK LOGIC
@@ -182,15 +182,15 @@ void dummy_controls_isr() {
     }
 }
 
-// void init_dummy_controls() {
-//     gpio_init(21); // trigger
-//     gpio_init(26); // hit 
-//     gpio_set_dir(21, 0);
-//     gpio_set_dir(26, 0);
+void init_dummy_controls() {
+    gpio_init(21); // trigger
+    gpio_init(26); // hit 
+    gpio_set_dir(21, 0);
+    gpio_set_dir(26, 0);
 
-//     gpio_add_raw_irq_handler(21, dummy_controls_isr);
-//     gpio_set_irq_enabled(21, GPIO_IRQ_EDGE_RISE, true);
-//     irq_set_enabled(IO_IRQ_BANK0, true);
-// }
+    gpio_add_raw_irq_handler(21, dummy_controls_isr);
+    gpio_set_irq_enabled(21, GPIO_IRQ_EDGE_RISE, true);
+    irq_set_enabled(IO_IRQ_BANK0, true);
+}
 
 int seed = 0;

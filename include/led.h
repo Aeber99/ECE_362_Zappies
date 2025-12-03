@@ -2,7 +2,7 @@
 #define LED_H
 
 #include <stdbool.h>
-void display_init_spi();
-void display_print(int id);
+void init_hit_sensor();
+void activate_hit_sensor(int id);
 
 #endif // LED_H 

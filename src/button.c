@@ -21,7 +21,7 @@ void wait_for_button_press(void) {
     // wait for stable pressed state for 30 ms
     while (1) {
         if (button_pressed()) {
-            // printf("Button press detected");
+            // printf("Button press detected\n");
             // sleep_ms(30);
             if (button_pressed()) {
 
