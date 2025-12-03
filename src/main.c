@@ -56,7 +56,7 @@
 
 
 /* this can be the static background*/
-int main() {
+// int main() {
   // stdio_init_all();
   // initVGA();
   //  init_inputs();
@@ -111,19 +111,19 @@ int main() {
   //   sleep_ms(1000);
   // }
 
-    stdio_init_all();
-    display_init_spi();
-    for (;;) {
-      for(int i = 0; i < 8; i++){
-        display_print(i);
-        printf("LED %d\n", i);
-        sleep_ms(500);
-      }
+    // stdio_init_all();
+    // display_init_spi();
+    // for (;;) {
+    //   for(int i = 0; i < 8; i++){
+    //     display_print(i);
+    //     printf("LED %d\n", i);
+    //     sleep_ms(500);
+    //   }
         
-    }
+    // }
 
-    for(;;);
-    return 0;
+    // for(;;);
+    // return 0;
 
 
 
@@ -158,79 +158,92 @@ int main() {
 // //     // Code for testing gun
 // //     init_gun(21, 26);
     
+// }
+
+
+
+
+int main() {
+  stdio_init_all();
+  initVGA();
+  init_inputs();
+  audio_init();
+
+
+  // Show intro screen: black background, big title
+  fillRect(0, 0, 640, 480, BLACK);
+  // Big title in the middle
+  setTextColorBig(WHITE, BLACK);
+  setCursor(120, 140);
+  writeStringBig("DUCK POP");
+  // small prompt
+  setTextColor(WHITE);
+  setCursor(260, 360);
+  writeStringBig("Press button to start");
+  init_dummy_controls();
+
+
+    // START logic
+    // *************
+    // Write code for start screen logic
+    printf("Press buttton to start game\n");
+    // dummy_control should move state to WAIT
+    while (game_state == START);
+    // **************
+
+    // Start long timer
+    init_game_timer_long(60000000); // Game last: 60 seconds
+    // fillRect(0, 0, 640, 480, BLACK);
+    fillRect(0, 0, 640, 360, CYAN);
+    fillRect(0, 360, 640, 120, GREEN);
+
+    for (;;) {
+        // Reset score
+        score = 0;
+        // Run as long as long timer is going
+        while(long_timer_done == 0) {
+            // WAIT Logic
+            printf("Waiting\n");
+            seed = get_rand_32() % 30;
+            init_game_timer_short(seed * 100000 + 4000000);
+            // timer short should isr should move state to DUCK
+            while (game_state == WAIT);
+            // DUCK Logic
+            printf("DUCK\n");
+            seed = get_rand_32() % 30;
+            init_game_timer_short(seed * 100000 + 5000000);
+            while (game_state != WAIT);
+        }
+
+        // FINISH logic
+        // *************
+        // Write code for finish screen logic
+        printf("Game finished!\n");
+        printf("Score: %d\n", (int)score);
+        printf("Press buttton to play again\n");
+        // dummy_control should move state to WAIT
+        while (game_state == FINISH);
+        // **************
+    for(;;);
+    return 0;
+    }
 }
 
 
+/*
+Things to do:
+-> add button / visuals for the finish screen
+1) press button to play again (same as start screen)
+2) show game over/ your score text
 
+-> no more random spawning
+1) do the math for the 9 ducks positions that match the led positions
+2) instead of the random spawning, spawn according to the led positions
+3) light up the corresponding led when duck spawns
+4) turn off the led when duck is shot or times up
 
-// int main() {
-//   stdio_init_all();
-//   initVGA();
-//   init_inputs();
-//   audio_init();
-//   // Show intro screen: black background, big title
-//   fillRect(0, 0, 640, 480, BLACK);
-//   // Big title in the middle
-//   setTextColorBig(WHITE, BLACK);
-//   setCursor(120, 140);
-//   writeStringBig("BALLOON POP");
-//   // small prompt
-//   setTextColor(WHITE);
-//   setCursor(260, 360);
-//   writeStringBig("Press button to start");
-//   init_dummy_controls();
-
-//     // START logic
-    
-//     // *************
-//     // Write code for start screen logic
-//     printf("Press buttton to start game\n");
-//     // dummy_control should move state to WAIT
-//     while (game_state == START);
-//     // **************
-
-//     // Start long timer
-//     init_game_timer_long(60000000); // Game last: 60 seconds
-
-//     // fillRect(0, 0, 640, 480, BLACK);
-//     fillRect(0, 0, 640, 360, CYAN);
-//     fillRect(0, 360, 640, 120, GREEN);
-
-//     for (;;) {
-//         // Reset score
-//         score = 0;
-
-//         // Run as long as long timer is going
-//         while(long_timer_done == 0) {
-//             // WAIT Logic
-//             printf("Waiting\n");
-//             seed = get_rand_32() % 30;
-//             init_game_timer_short(seed * 100000 + 4000000);
-//             // timer short should isr should move state to BALLOON
-//             while (game_state == WAIT);
-
-//             // BALLON Logic
-//             printf("BALLOoN\n");
-
-//             seed = get_rand_32() % 30;
-//             init_game_timer_short(seed * 100000 + 5000000);
-//             while (game_state != WAIT);
-//         }
-
-//         // FINISH logic
-    
-//         // *************
-//         // Write code for finish screen logic
-//         printf("Game finished!\n");
-//         printf("Score: %d\n", (int)score);
-//         printf("Press buttton to play again\n");
-//         // dummy_control should move state to WAIT
-//         while (game_state == FINISH);
-//         // **************
-
-//     for(;;);
-//     return 0;
-//     }
-
-    
-// }
+-> integrate the duck visuals from duck_hunt.c with the game state machine in main.c
+1) when in DUCK state, draw the duck at the position
+2) when shot, handle the shot and update score
+3) when times up, erase the duck
+*/
