@@ -101,15 +101,15 @@ int index=0;
   if (duck_alive) spawn_duck_at_index(index);
   wait_for_button_press();
   erase_current_duck();
-  index = (index + 1) % 9;
+  index = (index + 1);
   if (duck_alive) spawn_duck_at_index(index);
   wait_for_button_press();
   erase_current_duck();
-  index = (index + 1) % 9;
+  index = (index + 1);
   if (duck_alive) spawn_duck_at_index(index);
   wait_for_button_press();
   erase_current_duck();
-  index = (index + 1) % 9;
+  index = (index + 1);
   if (duck_alive) spawn_duck_at_index(index);
 
 //   // simulate a shot after 2 seconds to test shattering
