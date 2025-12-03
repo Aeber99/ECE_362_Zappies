@@ -182,18 +182,15 @@ void dummy_controls_isr() {
     }
 }
 
-void init_dummy_controls() {
-    gpio_init(21); // trigger
-    gpio_init(26); // hit 
-    gpio_set_dir(21, 0);
-    gpio_set_dir(26, 0);
+// void init_dummy_controls() {
+//     gpio_init(21); // trigger
+//     gpio_init(26); // hit 
+//     gpio_set_dir(21, 0);
+//     gpio_set_dir(26, 0);
 
-    // gpio_add_raw_irq_handler(21, dummy_controls_isr);
-    // gpio_set_irq_enabled(21, GPIO_IRQ_EDGE_RISE, true);
-    // irq_set_enabled(IO_IRQ_BANK0, true);
-    gpio_add_raw_irq_handler(26, dummy_controls_isr);
-    gpio_set_irq_enabled(26, GPIO_IRQ_EDGE_RISE, true);
-    irq_set_enabled(IO_IRQ_BANK0, true);
-}
+//     gpio_add_raw_irq_handler(21, dummy_controls_isr);
+//     gpio_set_irq_enabled(21, GPIO_IRQ_EDGE_RISE, true);
+//     irq_set_enabled(IO_IRQ_BANK0, true);
+// }
 
 int seed = 0;

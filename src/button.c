@@ -21,19 +21,19 @@ void wait_for_button_press(void) {
     // wait for stable pressed state for 30 ms
     while (1) {
         if (button_pressed()) {
-            printf("Button press detected");
-            sleep_ms(30);
+            // printf("Button press detected");
+            // sleep_ms(30);
             if (button_pressed()) {
 
 
                 while (button_pressed()) 
                 
-                sleep_ms(10);
-                printf("Button released, continuing\n");
+                // sleep_ms(10);
+                // printf("Button released, continuing\n");
                 return;
             }
         }
-        sleep_ms(10);
+        // sleep_ms(10);
     }
 }
 

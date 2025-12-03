@@ -436,13 +436,13 @@ void handleShot(int sx, int sy) {
   }
 }
 
-// spawn a new random duck in the sky
+// spawn a new random duck in the sky/grass region
 void spawnRandomDuck(void) {
   duck_alive = 1;
   // random x position: keep duck within screen bounds
   duck_x = (rand() % (640 - DUCK_W));
-  // random y position: constrain to sky (0 to 360-DUCK_H)
-  duck_y = (rand() % (360 - DUCK_H));
+  // random y position: constrain to sky (0 to 360-DUCK_H) -> no more no grass ducks
+  duck_y = (rand() % (480 - DUCK_H));
   drawDuck(duck_x, duck_y);
   printf("New duck spawned at (%d, %d)\n", duck_x, duck_y);
 }
