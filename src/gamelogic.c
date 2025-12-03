@@ -87,15 +87,17 @@ void update_time(int num) {
     char buf[32];
     int minutes = num / 60;
     int seconds = num % 60;
-    snprintf(buf, sizeof(buf), "Time %02d:%02d", minutes, seconds);
+    snprintf(buf, sizeof(buf), "Time: %02d:%02d", minutes, seconds);
+    fillRect(10, 10, 120, 40, BLACK);
     setTextColor(WHITE);
     setCursor(10, 10);
-    writeString(buf);
+    writeStringBig(buf);
 }
 
 //per sec stuff 
 void game_timer_isr_tick() {
     hw_clear_bits(&game_timer->intr, 1u << game_alarm_tick);
+    printf("Tick! Remaining seconds: %d\n", remaining_seconds);
 
     if (remaining_seconds > 0) {
         remaining_seconds--;
@@ -124,18 +126,20 @@ void start_game_clock_seconds(int seconds) {
 
 //logic to update score 
 void update_score(int hit) { //1 or -1 
-if (hit>0) 
+if (hit == 1) 
 {
     score += (uint32_t)hit * 100;
 }
-else {
+else if (hit == -1){
     score -= (uint32_t)(-hit) * 100;  //(-1)*(-1)=100 -> so -100 overall ryt
 }
 char buf[32];
 snprintf(buf, sizeof(buf), "Score: %u", (unsigned int)score);
+// fillRect(480, 10, 540, 40, BLACK);
+fillRect(10, 10, 120, 40, BLACK);
 setTextColor(WHITE);
-setCursor(480, 10);
-writeString(buf);
+setCursor(10, 10);
+writeStringBig(buf);
 }
 
 
@@ -146,11 +150,11 @@ void dummy_controls_isr() {
     printf("Press\n");
 
     if (game_state ==  START) {
+        update_score(0);
         game_state = WAIT;
     } else if (game_state == BALLOON) {
         // CHECK LOGIC
         game_state = CHECK;
-
         // ******************
         // ADD CHECK LOGIC HERE
         int hit = gpio_get(26);
@@ -169,7 +173,7 @@ void dummy_controls_isr() {
             printf("MISS\n");
             // score --;
             // keep score unchanged on miss?
-            // update_score(-1);
+            update_score(-1);
             game_state = MISS;
             game_state = BALLOON;
         }
@@ -178,8 +182,8 @@ void dummy_controls_isr() {
 }
 
 void init_dummy_controls() {
-    gpio_init(21);
-    gpio_init(26);
+    gpio_init(21); // trigger
+    gpio_init(26); // hit 
     gpio_set_dir(21, 0);
     gpio_set_dir(26, 0);
 

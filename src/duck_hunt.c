@@ -426,7 +426,8 @@ void handleShot(int sx, int sy) {
     if (duck_alive) {
       duck_alive = 0;
       // play short shot buzz
-      audio_play_shot();
+      // audio_play_shot();
+      playsound(1);
       shatterDuck();
       // spawn a new random duck after shatter animation completes
       sleep_ms(500);
