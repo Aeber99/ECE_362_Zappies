@@ -37,12 +37,11 @@ void display_init_spi(uint32_t freq_hz)
     pwm_set_clkdiv(slice_num, clkdiv);
     
     // uint32_t wrap = 1000000u / freq_hz;
-    uint32_t wrap = 1000000u / 10000; // 15.7 kHz
+    uint32_t wrap = 1000000u / 15700; // 15.7 kHz (whattttt - Michael)
+    // uint32_t wrap = 1000000u / 20; // 15.7 kHz (whattttt - Michael)
     pwm_set_wrap(slice_num, wrap - 1);
-    pwm_set_chan_level(slice_num, channel, (wrap - 1) / 2);
-
-
-    pwm_set_chan_level(slice_num, channel, 10); //highest possible duty cycle
+    pwm_set_chan_level(slice_num, channel, (wrap / 2));
+    
     pwm_set_enabled(slice_num, true);
     // sleep_ms(10);
 
