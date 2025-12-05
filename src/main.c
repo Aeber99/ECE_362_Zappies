@@ -42,7 +42,7 @@ bool repeating_timer_callback(struct repeating_timer *t) {
 
 int main() {
     // overclock
-    set_sys_clock_khz(120000, true) ;
+    set_sys_clock_khz(150000, true) ;
     
     // Initialize stdio
     stdio_init_all();
